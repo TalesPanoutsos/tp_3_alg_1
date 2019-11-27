@@ -151,7 +151,7 @@ int* decisor_de_posicao(int **matriz, int N, int nums[], int quad_n , int quad_m
 	
 }
 
-int **backtrack(int **matriz, int N, int quad_n, int quad_m){
+int **backtrack(int **matriz, int N, int quad_n, int quad_m, bool heuristico){
 	int nums[N];
 	inicializa_nums(N, nums);
 
@@ -173,18 +173,19 @@ int **backtrack(int **matriz, int N, int quad_n, int quad_m){
 	posicao = decisor_de_posicao(matriz_resposta, N, nums, quad_n , quad_m);
 	int I = posicao[0];
 	int J = posicao[1];
-	if(I==-2){
+	if(I==-2)
 		return matriz_resposta;
-	}
+	
+
 
 	for (int i = 0; i < N; ++i){
 		if(nums[i]==1 and I!=-1){
 			matriz_resposta[I][J] = i+1;
-			print_matriz(matriz_resposta, N);
 			copiar_matriz(matriz_resposta, matriz_aux, N);
-			matriz_aux = backtrack(matriz_resposta, N, quad_n, quad_m);
+			matriz_aux = backtrack(matriz_resposta, N, quad_n, quad_m, heuristico);
 			if(resolvido(matriz_aux, N))
 				return matriz_aux;
+
 		}
 	}
 
@@ -213,17 +214,13 @@ int main(int argc, char const *argv[]){
 		//Espaço pra manobra
 
 	
-		auto start = high_resolution_clock::now(); 
-		matriz = backtrack(matriz, N, quad_n, quad_m);
-		auto stop = high_resolution_clock::now(); 
-		
-		auto duration = duration_cast<microseconds>(stop - start);
-        cout<<duration.count()/100;
+		matriz = backtrack(matriz, N, quad_n, quad_m, 1);
+	
 		//print_matriz(matriz, N);
 
-
-
 	}else
+
 		printf("Nenhum arquivo no parametro");
+
 	return 0;
 }
